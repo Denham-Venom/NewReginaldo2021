@@ -49,3 +49,5 @@ public class ExampleAuto extends SequentialCommandGroup {
   }
 
 }
+
+// made changes
