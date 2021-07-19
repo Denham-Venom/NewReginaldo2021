@@ -29,6 +29,8 @@ public class Vision extends SubsystemBase {
         }
         
         SmartDashboard.putNumber("LLDistance", limelight.getDistance().getNorm());
+        SmartDashboard.putNumber("LLTx", limelight.getTx().getDegrees());
+
     }
 
 }

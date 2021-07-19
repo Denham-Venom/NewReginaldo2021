@@ -3,7 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.States.ShooterStates;
-import frc.robot.autos.ExampleAuto;
+import frc.robot.autos.TrenchRun;
 import frc.robot.commands.IndexerControl;
 import frc.robot.commands.IntakeControl;
 import frc.robot.commands.IntakePistonControl;
@@ -47,8 +47,8 @@ public class RobotContainer {
     private final JoystickButton zeroShooterAngleButton = new JoystickButton(operator, XboxController.Button.kStart.value);
 
     /* Subsystems */
-    private final VisionVision = new Vision();
-    private final DriveTrain robotDrive = new DriveTrain();
+    private final Vision Vision = new Vision();
+    private final DriveTrain robotDrive = new DriveTrain(Vision);
     private final Intake Intake = new Intake();
     private final Indexer Indexer = new Indexer();
     private final Kicker Kicker = new Kicker();
@@ -79,9 +79,9 @@ public class RobotContainer {
         /* Shooting */
         shootButton.whileHeld(
             new ParallelCommandGroup(
-            new KickerControl(Kicker, 1.0), 
-            new IndexerControl(Indexer, 1.0),
-            new IntakeControl(Intake, 1.0)            
+                new KickerControl(Kicker, 1.0), 
+                new IndexerControl(Indexer, 1.0),
+                new IntakeControl(Intake, 1.0)            
             )
         );
         shooterActivateButton.whenPressed(new InstantCommand(() -> activate_Shooter()));
@@ -115,6 +115,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new ExampleAuto(robotDrive).andThen(() -> robotDrive.arcadeDrive(0, 0, false));
+        return new TrenchRun(robotDrive).andThen(() -> robotDrive.arcadeDrive(0, 0, false));
     }
 }

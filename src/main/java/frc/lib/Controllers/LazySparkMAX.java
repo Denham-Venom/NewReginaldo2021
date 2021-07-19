@@ -73,7 +73,7 @@ public class LazySparkMAX extends CANSparkMax {
      * @param sensor
      */
     public void setFeedbackDevice(CANSensor sensor) {
-        midController.setFeedbackDevice(sensor);
+        pidController.setFeedbackDevice(sensor);
     }
 
     public double getPosition(){

@@ -24,13 +24,13 @@ public final class Constants {
             new TalonConstants(1, talonCurrentLimit.supplyCurLim40, NeutralMode.Brake, InvertType.None);
     
         public static final TalonConstants leftChild = 
-            new TalonConstants(2, talonCurrentLimit.supplyCurLim40, NeutralMode.Brake, InvertType.FollowParent);
+            new TalonConstants(2, talonCurrentLimit.supplyCurLim40, NeutralMode.Brake, InvertType.FollowMaster);
 
-        public static final TalonConstants rightParent = 
-            new TalonConstants(3, talonCurrentLimit.supplyCurLim40, NeutralMode.Brake, InvertType.InvertMotorOutput);
-            
-        public static final TalonConstants rightChild = 
-            new TalonConstants(4, talonCurrentLimit.supplyCurLim40, NeutralMode.Brake, InvertType.FollowParent);
+        public static final TalonConstants rightParent = new TalonConstants(3, talonCurrentLimit.supplyCurLim40,
+                NeutralMode.Brake, InvertType.InvertMotorOutput);
+
+        public static final TalonConstants rightChild = new TalonConstants(4, talonCurrentLimit.supplyCurLim40,
+                NeutralMode.Brake, InvertType.FollowMaster);
 
         
         /* Drivebase Constants */
@@ -77,7 +77,7 @@ public final class Constants {
             new TalonConstants(5, talonCurrentLimit.supplyCurLim40, NeutralMode.Coast, InvertType.InvertMotorOutput);
             
         public static final TalonConstants shooterChildConstants = 
-            new TalonConstants(6, talonCurrentLimit.supplyCurLim40, NeutralMode.Coast, InvertType.OpposeParent);    
+            new TalonConstants(6, talonCurrentLimit.supplyCurLim40, NeutralMode.Coast, InvertType.OpposeMaster);
 
         public static final SparkConstants angleMotorConstants =
             new SparkConstants(9, MotorType.kBrushless, 60, IdleMode.kCoast, false);

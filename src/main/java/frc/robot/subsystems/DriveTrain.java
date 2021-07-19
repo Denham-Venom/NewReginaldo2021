@@ -4,17 +4,22 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.Controllers.WPI_LazyTalonFX;
 import frc.lib.math.Boundaries;
 import frc.lib.math.Conversions;
+import frc.lib.util.Limelight;
 import frc.robot.Constants;
+import frc.robot.States;
+import frc.robot.States.ShooterStates;
 
 public class DriveTrain extends SubsystemBase {
 
@@ -27,11 +32,15 @@ public class DriveTrain extends SubsystemBase {
     private DifferentialDriveOdometry odometry;
     private SimpleMotorFeedforward driveFF;
 
+    private final TrapezoidProfile.Constraints constraints;
+    private final ProfiledPIDController controller;
+    private final Limelight Limelight;
+
     private AHRS gyro;
 
     // private double previousP = 0;
 
-    public DriveTrain() {
+    public DriveTrain(Vision vision) {
         leftParent = new WPI_LazyTalonFX(Constants.Drive.leftParent);
         leftChild = new WPI_LazyTalonFX(Constants.Drive.leftChild);
         rightParent = new WPI_LazyTalonFX(Constants.Drive.rightParent);
@@ -51,6 +60,11 @@ public class DriveTrain extends SubsystemBase {
         robotDrive.setSafetyEnabled(false);
         odometry = new DifferentialDriveOdometry(getYaw());
         driveFF = new SimpleMotorFeedforward(Constants.Drive.drivekS / 12, Constants.Drive.drivekV / 12, Constants.Drive.drivekA / 12);
+
+        constraints = new TrapezoidProfile.Constraints(1.75, 1.75);
+        controller = new ProfiledPIDController(0.02, 0.0, 0.001, constraints);
+        controller.setGoal(0);
+        Limelight = vision.limelight;
 
     }
 
@@ -110,6 +124,18 @@ public class DriveTrain extends SubsystemBase {
     @Override
     public void periodic() {
         odometry.update(getYaw(), getLeftPos(), getRightPos());
+        
+        switch(States.shooterState){
+            case notCalibrated:
+                break;
+
+            case disabled:
+                break;
+                
+            case preShoot:
+                robotDrive.arcadeDrive(0.0, controller.calculate(Limelight.getTx().getDegrees()), false);
+                break;
+        }
 
         // double mps = SmartDashboard.getNumber("Drive mps", 0);
         // setWheelState(mps, mps);
